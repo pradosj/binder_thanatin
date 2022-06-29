@@ -1,0 +1,316 @@
+---
+title: "Enrichment analysis"
+output: 
+  html_notebook:
+    code_folding: hide
+---
+
+
+# TODO:
+- create GSEA excel table
+- do GO terms analysis
+
+
+```{r,include=FALSE}
+library(SummarizedExperiment)
+library(magrittr)
+library(ggplot2)
+library(patchwork)
+```
+
+
+# Load data, and add manual geneset annotations
+```{r}
+x <- readRDS("data_with_go.rds")
+rownames(x) <- make.unique(mcols(x)$gene)
+mcols(x)$manual_genesets <- local({
+  G <- read.csv2("manual_genesets.csv")
+  G$locus_tag <- factor(G$locus_tag,unique(mcols(x)$locus_tag))
+  unique(splitAsList(G$category,G$locus_tag))[mcols(x)$locus_tag]
+})
+```
+
+
+# Add sigE annotation to regDB
+```{r}
+is_sigE <- any(grepl("^Sigma E",mcols(x)$manual_genesets))
+mcols(x)$regdb[is_sigE] <- pc(rep(CharacterList("SigE"),sum(is_sigE)),mcols(x)$regdb[is_sigE])
+```
+
+
+
+# Compute some summary statistics
+```{r}
+x <- local({
+  # Log transform RPKM read counts matrix
+  m <- log2(assay(x,"rpkm")+1)
+  # Split the whole matrix, into submatrices of replicates
+  m <- splitAsList(colnames(m),sprintf("%s%.3d",x$cond,x$time)) %>%
+    lapply(function(cn) m[,cn])
+  
+  # Compute average replicate values
+  mcols(x)$avg_log2_rpkm <- sapply(m,rowMeans)
+
+  # List the pairwise comparison to perform, and compute the log2_fc
+  cmp <- matrix(byrow=TRUE,ncol=2,c(
+    "C005","C000",
+    "C030","C000",
+    "C120","C000",
+    "C030","C005",
+    "C120","C005",
+    "C120","C030",
+    "T005","C000",
+    "T030","C000",
+    "T120","C000",
+    "T030","T005",
+    "T120","T005",
+    "T120","T030")
+  )
+  mcols(x)$log2_fc_avg <- mcols(x)$avg_log2_rpkm[,cmp[,1]] - mcols(x)$avg_log2_rpkm[,cmp[,2]]
+  colnames(mcols(x)$log2_fc_avg) <- paste0(cmp[,1],"/",cmp[,2])
+  x
+})
+```
+
+
+
+# Output the excel table
+```{r}
+local({
+  mcols(x)$count <- assay(x,"count_antisense")
+  mcols(x)$rpkm <- assay(x,"rpkm")
+  mcols(x)$position <- as.character(granges(x))
+  D <- mcols(x)[c("position","locus_tag","gene","log2_fc_avg","avg_log2_rpkm","rpkm","count","manual_genesets","regdb")]
+  D$manual_genesets <- unclass(table(D$manual_genesets))
+  D$regdb <- unstrsplit(D$regdb,";")
+  write.table(as(D,"data.frame"),sep="\t",file = "out/gene_count.tsv",row.names=FALSE,na = "")
+})
+```
+
+
+
+
+```{r}
+ggscatter <- function(x,qx,qy) {
+  mcols(x)[c("locus_tag","gene","log2_fc_avg")] %>%
+    as("data.frame") %>%
+    ggplot(aes_(x=qx,y=qy)) + 
+      coord_equal(xlim=c(-10,10),ylim=c(-10,10)) +
+      geom_point(aes(
+        text = gene,
+        color = abs(..x.. - ..y..) < log2(1.5)
+      ),size=0.6) +
+      geom_abline(slope=1,intercept = 0) +
+      scale_color_manual(values=c("#2C7FB8","#7FCDBB")) +
+      theme(legend.position="none",panel.grid = element_blank(),panel.background = element_blank())
+}
+p0 <- ggscatter(x,~`log2_fc_avg.C005/C000`,~`log2_fc_avg.T005/C000`) + ggtitle("0' >> 5'")
+p1 <- ggscatter(x,~`log2_fc_avg.C030/C005`,~`log2_fc_avg.T030/T005`) + ggtitle("5' >> 30'")
+p2 <- ggscatter(x,~`log2_fc_avg.C120/C030`,~`log2_fc_avg.T120/T030`) + ggtitle("30' >> 120'")
+p0+p1+p2
+ggsave("out/scatter.pdf",width=15,height=6)
+
+plotly::ggplotly(p0,tooltip="text") %>% plotly::config(displayModeBar = FALSE)
+plotly::ggplotly(p1,tooltip="text") %>% plotly::config(displayModeBar = FALSE)
+plotly::ggplotly(p2,tooltip="text") %>% plotly::config(displayModeBar = FALSE)
+```
+
+
+
+```{r}
+ggmap <- function(x,qx,qy,highlight) {
+  highlight <- as.logical(highlight)
+  X <- mcols(x)[c("locus_tag","gene","log2_fc_avg")] %>%
+    cbind(highlight_mask=highlight_mask) %>%
+    as("data.frame")
+  ggplot(mapping = aes_(x=qx,y=qy)) + 
+      coord_equal(xlim=c(-10,10),ylim=c(-10,10)) +
+      geom_point(aes(text = gene),size=0.6,color="#7FCDBB",data=X[!X$highlight_mask,]) +
+      geom_point(aes(text = gene),size=0.6,color="#2C7FB8",data=X[X$highlight_mask,]) +
+      geom_abline(slope=1,intercept = c(-log2(1.5),log2(1.5))) +
+      theme(legend.position="none",panel.grid = element_blank(),panel.background = element_blank())
+}
+#color_mask <- !any(grepl("^Cpx",mcols(x)$manual_genesets))
+highlight_mask <- any(grepl("^CpxR",mcols(x)$regdb))
+p0 <- ggmap(x,~`log2_fc_avg.C005/C000`,~`log2_fc_avg.T005/C000`,highlight_mask) + ggtitle("0' >> 5'")
+p1 <- ggmap(x,~`log2_fc_avg.C030/C005`,~`log2_fc_avg.T030/T005`,highlight_mask) + ggtitle("5' >> 30'")
+p2 <- ggmap(x,~`log2_fc_avg.C120/C030`,~`log2_fc_avg.T120/T030`,highlight_mask) + ggtitle("30' >> 120'")
+p0+p1+p2
+
+plotly::ggplotly(p0,tooltip="text") %>% plotly::config(displayModeBar = TRUE)
+plotly::ggplotly(p1,tooltip="text") %>% plotly::config(displayModeBar = TRUE)
+plotly::ggplotly(p2,tooltip="text") %>% plotly::config(displayModeBar = TRUE)
+```
+
+
+# Example genes
+
+```{r}
+gg_gene_timecourse <- function(X) {
+  Z <- reshape2::melt(assay(X,"rpkm"))
+  Z <- cbind(Z,colData(X)[Z$Var2,])
+  Z <- cbind(Z,mcols(X)[Z$Var1,c("gene","locus_tag")])
+  Z$gene <- factor(Z$gene,mcols(X)$gene)
+  ggplot(Z) + facet_wrap(~gene,scales="free_y") +
+    geom_line(aes(x=time,y=value,group=sample,color=cond)) + 
+    geom_point(aes(x=time,y=value,color=cond)) + ylab("normalized gene expression (rpkm)")
+}
+
+gg_gene_timecourse(x[match(c("cpxP","ldtD","rpoE","lptA","eptA","rprA"),mcols(x)$gene)])
+gg_gene_timecourse(x[c("cpxP","ldtD","rpoE","lptA","eptA","rprA")])
+gg_gene_timecourse(x[match(c("degP","dsbA","ppiA","sulA"),mcols(x)$gene)])
+
+
+
+gg_gene_timecourse(x[match(c("b3702"),mcols(x)$locus_tag)])
+```
+
+
+```{r,fig.width=6,fig.height=4}
+gg_gene_timecourse(x[any(grepl("^Cpx stress",mcols(x)$manual_genesets))]) + ggtitle("Cpx stress")
+```
+
+
+```{r,fig.width=3,fig.height=2.5}
+gg_gene_timecourse(x[any(grepl("^Lipopolysaccharide transport",mcols(x)$manual_genesets))]) + ggtitle("^Lipopolysaccharide transport")
+```
+
+
+
+# Regulon DB
+
+```{r}
+source("lib/gsea/lib_gsea.R")
+mcols(x)$treatment_change <- cbind(
+  "0' >> 5'" = (mcols(x)$log2_fc_avg[,"T005/C000"] - mcols(x)$log2_fc_avg[,"C005/C000"]),
+  "5' >> 30'" = (mcols(x)$log2_fc_avg[,"T030/T005"] - mcols(x)$log2_fc_avg[,"C030/C005"]),
+  "30' >> 120'" = (mcols(x)$log2_fc_avg[,"T120/T030"] - mcols(x)$log2_fc_avg[,"C120/C030"]),
+  "5' >> 120'" = (mcols(x)$log2_fc_avg[,"T120/T005"] - mcols(x)$log2_fc_avg[,"C120/C005"])
+)
+
+
+M <- cbind(
+  mcols(x)$treatment_change >= +log2(1.5),
+  mcols(x)$treatment_change <= -log2(1.5)
+)
+rownames(M) <- mcols(x)$locus_tag
+
+gsea <- multi_gsea(M,setNames(mcols(x)$regdb,mcols(x)$locus_tag))
+gsea$id <- gsea$geneset_name
+GSEA <- gsea[rowSums(gsea$enrichment_qval<=5e-2)>0,]
+#GSEA <- subset(gsea,geneset_name %in% c("PhoB","PhoP","RcsB","RcsAB","GadE-RcsB","RcsB-BglJ"))
+#GSEA <- gsea
+```
+
+
+```{r,fig.height=6,fig.width=6}
+library(igraph)
+library(ggraph)
+source("lib/gsea/lib_obo.R")
+
+# Subset the hierachy
+h <- graph_from_edgelist(cbind(unique(unlist(mcols(x)$regdb)),"regdb"))
+H <- induced_subgraph(h,unique(as.character(reachable(h,V(h)[GSEA$id])$node_id)))
+
+# unfold DAG into a tree and annotate the tree
+U <- unfold_dag(H)
+V(U$tree)$tree_depth <- nchar(gsub("[^/]","",V(U$tree)$name))
+V(U$tree)$order[order(V(U$tree)$name)] <- rev(seq(vcount(U$tree)))
+V(U$tree)$id <- V(H)$name[U$vertex_index]
+V(U$tree)$term <- V(H)$name[U$vertex_index]
+V(U$tree)$geneset_size <- gsea$geneset_size[match(V(U$tree)$id,gsea$id)]
+
+# tree display as a folder
+p_tree <- ggraph(U$tree,layout=cbind(V(U$tree)$tree_depth,V(U$tree)$order)) + 
+  geom_edge_bend(flipped = TRUE) +
+  geom_node_point() +
+  geom_node_text(aes(x = x+0.5,label=sprintf("%s (%d)",term,geneset_size)),hjust=0,size=3) +
+  coord_cartesian(xlim=c(0,10)) + 
+  theme(axis.ticks.y = element_line(),axis.text.y = element_text())
+
+
+# generate matrix horizontal barplot
+m <- -log10(gsea$enrichment_pval[match(V(U$tree)$id,gsea$id),])[order(V(U$tree)$order),]
+rownames(m) <- seq(nrow(m))
+m[m>7] <- 7
+colnames(m) <- sub("(up|dn).","",colnames(m))
+
+N <- gsea$overlap_size[match(V(U$tree)$id,gsea$id),][order(V(U$tree)$order),]
+
+
+p1 <- gg_matrix_hcol2(m[,1:4],m[,5:8],N[,1:4],N[,5:8]) + 
+  theme(legend.position = "none") + scale_fill_manual(values=c("#990099","yellow"))
+
+p_tree + p1 + plot_layout(width=c(1,4)) & ylim(0.5,66.5)
+
+```
+
+
+
+
+```{r,eval=FALSE}
+g <- mcols(x)$regdb %>%
+  setNames(mcols(x)$gene_id) %>%
+  stack() %>%
+  as.data.frame() %>% rev() %>%
+  graph_from_data_frame()
+G <- data.frame("root",unique(unlist(mcols(x)$regdb))) %>%
+  graph_from_data_frame()
+g <- g + G
+V(g)$fc <- mcols(x)$treatment_change[match(V(g)$name,mcols(x)$gene_id),"5' >> 30'"]
+
+h <- unfold_tree(g,"out","root")
+V(h$tree)$fc <- V(g)$fc[h$vertex_index]
+V(h$tree)$regdb <-V(g)$name[h$vertex_index] 
+set.seed(12345)
+ggraph(h$tree,"circlepack") +
+  geom_node_circle(aes(fill=pmax(pmin(fc,2),-2),filter=leaf),color=NA,n=5) + 
+  geom_node_circle(aes(filter=!leaf),color="lightgrey") + 
+  #geom_node_text(aes(label=regdb,filter=(!leaf & !(regdb %in% "root"))),size=2) +
+  scale_fill_distiller(palette = "RdBu",direction = -1) +
+  coord_equal() + theme(panel.background=element_blank()) + 
+  labs(fill=expression(log[2](fc)))
+```
+
+
+
+
+
+
+
+
+
+# Gene Ontology
+
+
+
+```{r}
+M <- cbind(
+  mcols(x)$treatment_change[,2,drop=FALSE] >= +log2(1.5),
+  mcols(x)$treatment_change[,2,drop=FALSE] <= -log2(1.5)
+)
+rownames(M) <- mcols(x)$locus_tag
+colSums(M)
+
+gsea <- multi_gsea(M,setNames(mcols(x)$goall_term,mcols(x)$locus_tag))
+gsea$id <- sub(":::.*","",gsea$geneset_name)
+GSEA <- gsea[rowSums(gsea$enrichment_qval<=1e-3)>0,]
+```
+
+
+```{r}
+library(igraph)
+library(ggraph)
+source("lib/gsea/lib_obo.R")
+
+# Subset the hierachy
+h <- metadata(x)$go_obo
+H <- induced_subgraph(h,unique(as.character(reachable(h,V(h)[GSEA$id])$node_id)))
+V(H)$min_qval <- rowMins(gsea$enrichment_qval)[match(V(H)$name,gsea$id)]
+
+ggraph(H,"stress") + geom_node_point() + geom_edge_link() + geom_node_text(aes(label=term,color=min_qval<1e-3),size=3) 
+```
+
+
+
+

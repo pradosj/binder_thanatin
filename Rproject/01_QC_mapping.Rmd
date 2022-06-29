@@ -1,0 +1,89 @@
+---
+title: "Sequencing Quality Control"
+output: 
+  html_notebook:
+    code_folding: hide
+---
+
+```{r,include=FALSE}
+library(SummarizedExperiment)
+library(magrittr)
+library(ggplot2)
+library(patchwork)
+```
+
+# Load data
+
+```{r}
+x <- readRDS("data_with_go.rds")
+```
+
+# Some mapping statistics
+
+```{r,fig.width=6,fig.height=1.5}
+p1 <- ggplot(as.data.frame(colData(x)),aes(y=lib)) + 
+  geom_col(aes(x=Tot_reads,fill="unmapped")) + 
+  geom_col(aes(x=Mapped_reads_including_multimappers,fill="multi mapper")) + 
+  geom_col(aes(x=Mapped_reads,fill="unique mapper")) + 
+  ggtitle("Number of sequenced read per library") +
+  ylab("") + xlab("number of read") + labs(fill="map type")
+
+p2 <- ggplot(as.data.frame(colData(x)),aes(y=lib)) + 
+  geom_col(aes(x=1,fill="unmapped")) + 
+  geom_col(aes(x=Mapped_reads_including_multimappers/Tot_reads,fill="multi mapper")) + 
+  geom_col(aes(x=Mapped_reads/Tot_reads,fill="unique mapper")) + 
+  scale_x_continuous(labels = scales::percent) + 
+  ggtitle("Proportion of mapped read per library") +
+  ylab("") + xlab("% mapped read") + labs(fill="map type")
+p1 + p2
+```
+
+```{r,fig.height=1.5,fig.width=4}
+local({
+  n <- rowsum(assay(x,"count_antisense"),mcols(x)$gene_biotype)
+  n <- n / colSums(n)[col(n)]
+  ggplot(as.data.frame(as.table(n))) + 
+    ggtitle("Feature type proportion") +
+    geom_col(aes(x=Freq,y=Var2,fill=Var1)) + 
+    xlab("") + ylab("") + labs(fill="gene type") +
+    scale_x_continuous(labels=scales::percent) + xlab("% total counts")
+})
+```
+
+# PCA
+
+```{r,fig.height=1.5,fig.width=5}
+x$pca <- local({
+  rpkm <- assay(x,"rpkm")
+  rpkm <- rpkm[rowMeans(rpkm)>1,]
+  prcomp(t(log2(rpkm+1)),rank. = 3)$x
+})
+ggplot(as.data.frame(colData(x))) + 
+  geom_label(aes(x=pca.PC1,y=pca.PC2,label=time,fill=cond)) + 
+  coord_equal()  + theme(panel.grid = element_blank())
+ggplot(as.data.frame(colData(x))) + 
+  geom_label(aes(x=pca.PC1,y=pca.PC2,label=lib,fill=cond)) + 
+  coord_equal()  + theme(panel.grid = element_blank())
+```
+
+# Heatmap of all genes
+
+```{r,fig.height=1.5,fig.width=7}
+local({
+  rpkm <- log2(assay(x,"rpkm")+1)
+  rpkm <- rpkm - rowMeans(rpkm)
+  rpkm[rpkm > 3] <- 3
+  rpkm[rpkm < -3] <- -3
+  h1 <- hclust(dist(rpkm),method = "ward.D2")
+  h2 <- hclust(dist(t(rpkm)),method = "ward.D2")
+  rpkm <- rpkm[h1$order,]
+  
+  ggplot(reshape2::melt(rpkm)) + 
+    geom_tile(aes(x=Var1,y=Var2,fill=value)) + 
+    scale_fill_distiller(palette = "BrBG") +
+    theme_void() + theme(axis.text.y = element_text(hjust=1),axis.title.x = element_text()) + xlab("gene") +
+    labs(fill=expression(log[2](FC))) + 
+    ggtitle("Heatmap relatively to average gene expression")
+})
+ggsave("out/heatmap.pdf",width=15,height=3)
+```

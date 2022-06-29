@@ -1,0 +1,24 @@
+install.packages(c(
+  "BiocManager",
+  "ggplot2",
+  "ggraph",
+  "igraph",
+  "reshape2",
+  "gplots",
+  "readxl",
+  "scico",
+  "patchwork",
+  "magrittr",
+  "plotly"
+))
+BiocManager::install(c(
+  "GenomicRanges",
+  "SummarizedExperiment",
+  "HDF5Array",
+  "rtracklayer",
+  "GenomicAlignments",
+  "GenomicFiles",
+  "ShortReads",
+  "ComplexHeatmap"
+))
+

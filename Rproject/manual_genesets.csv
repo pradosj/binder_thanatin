@@ -1,0 +1,382 @@
+locus_tag;category;symbol;source
+b0176;Anti-sigma factor antagonist activity;rseP;cardoso
+b2571;Antisigma factor binding;rseB;cardoso
+b2617;Bam complex;bamE;cardoso
+b2595;Bam complex;bamD;cardoso
+b2512;Bam complex;bamB;cardoso
+b0177;Bam complex;bamA;cardoso
+b2477;Bam complex;bamC;cardoso
+b1112;Biofilm formation;bhsA;cardoso
+b4041;Catalyzes the first committed step in phospholipid biosynthesis;plsB;cardoso
+b1890;Cell motility;motA;cardoso
+b1889;Cell motility;motB;cardoso
+b2061;Colanic acid biosynthetic process;wzb;cardoso
+b2060;Colanic acid biosynthetic process;wzc;cardoso
+b2062;Colanic acid metabolic process;wza;cardoso
+b4484;Cpx stress response modulator;cpxP;cardoso
+b4431;Cpx stress response regulon;rprA;cardoso
+b3911;Cpx stress response regulon;cpxA;cardoso
+b3912;Cpx stress response regulon;cpxR;cardoso
+b4484;Cpx stress response regulon;cpxP;cardoso
+b0925;Cpx stress response regulon;ldtD;cardoso
+b0161;Cpx stress response regulon;degP;cardoso
+b0178;Cpx stress response regulon;skp;cardoso
+b0179;Cpx stress response regulon;lpxD;cardoso
+b0180;Cpx stress response regulon;fabZ;cardoso
+b0181;Cpx stress response regulon;lpxA;cardoso
+b0377;Cpx stress response regulon;sbmA;cardoso
+b0378;Cpx stress response regulon;yaiW;cardoso
+b0441;Cpx stress response regulon;ppiD;cardoso
+b0461;Cpx stress response regulon;tomB;cardoso
+b0460;Cpx stress response regulon;hha;cardoso
+b0754;Cpx stress response regulon;aroG;cardoso
+b0929;Cpx stress response regulon;ompF;cardoso
+b0970;Cpx stress response regulon;yccA;cardoso
+b4490;Cpx stress response regulon;efeU;cardoso
+b1040;Cpx stress response regulon;csgD;cardoso
+b1039;Cpx stress response regulon;csgE;cardoso
+b1038;Cpx stress response regulon;csgF;cardoso
+b1037;Cpx stress response regulon;csgG;cardoso
+b1041;Cpx stress response regulon;csgB;cardoso
+b1042;Cpx stress response regulon;csgA;cardoso
+b1043;Cpx stress response regulon;csgC;cardoso
+b1113;Cpx stress response regulon;ldtC;cardoso
+b1530;Cpx stress response regulon;marR;cardoso
+b1531;Cpx stress response regulon;marA;cardoso
+b1532;Cpx stress response regulon;marB;cardoso
+b1535;Cpx stress response regulon;dgcZ;cardoso
+b1743;Cpx stress response regulon;spy;cardoso
+b1846;Cpx stress response regulon;yebE;cardoso
+b4828;Cpx stress response regulon;;cardoso
+b1890;Cpx stress response regulon;motA;cardoso
+b1889;Cpx stress response regulon;motB;cardoso
+b1888;Cpx stress response regulon;cheA;cardoso
+b1887;Cpx stress response regulon;cheW;cardoso
+b1902;Cpx stress response regulon;ftnB;cardoso
+b2074;Cpx stress response regulon;mdtA;cardoso
+b2075;Cpx stress response regulon;mdtB;cardoso
+b2076;Cpx stress response regulon;mdtC;cardoso
+b2077;Cpx stress response regulon;mdtD;cardoso
+b2078;Cpx stress response regulon;baeS;cardoso
+b2079;Cpx stress response regulon;baeR;cardoso
+b4438;Cpx stress response regulon;cyaR;cardoso
+b2215;Cpx stress response regulon;ompC;cardoso
+b2470;Cpx stress response regulon;acrD;cardoso
+b2580;Cpx stress response regulon;ung;cardoso
+b2617;Cpx stress response regulon;bamE;cardoso
+b2666;Cpx stress response regulon;yqaE;cardoso
+b2665;Cpx stress response regulon;kbp;cardoso
+b2666;Cpx stress response regulon;yqaE;cardoso
+b2893;Cpx stress response regulon;dsbC;cardoso
+b3057;Cpx stress response regulon;bacA;cardoso
+b3095;Cpx stress response regulon;yqjA;cardoso
+b3096;Cpx stress response regulon;mzrA;cardoso
+b3363;Cpx stress response regulon;ppiA;cardoso
+b3461;Cpx stress response regulon;rpoH;cardoso
+b3688;Cpx stress response regulon;yidQ;cardoso
+b3859;Cpx stress response regulon;srkA;cardoso
+b3860;Cpx stress response regulon;dsbA;cardoso
+b4716;Cpx stress response regulon;cpxQ;cardoso
+b4160;Cpx stress response regulon;psd;cardoso
+b4159;Cpx stress response regulon;mscM;cardoso
+b4188;Cpx stress response regulon;yjfN;cardoso
+b4355;Cpx stress response regulon;tsr;cardoso
+b4392;Cpx stress response regulon;slt;cardoso
+b2470;Cpx stress response regulon;acrD;cardoso
+b2573;Cpx stress response regulon;rpoE;cardoso
+b4725;Cpx stress response regulon;rseD;cardoso
+b2572;Cpx stress response regulon;rseA;cardoso
+b2571;Cpx stress response regulon;rseB;cardoso
+b2570;Cpx stress response regulon;rseC;cardoso
+b0554;Cytolysis;essD;cardoso
+b0555;Cytolysis;rrrD;cardoso
+b0556;Cytolysis;rzpD;cardoso
+b3150;Division and outer membrane stress-associated lipid-binding lipoprotein;yraP;cardoso
+b0184;DNA polymerase activity;dnaE;cardoso
+b0472;DNA recombination;recR;cardoso
+b2892;DNA recombination;recJ;cardoso
+b2892;DNA repair;recJ;cardoso
+b3912;DNA-binding transcriptional regulator;cpxR;cardoso
+b2079;DNA-binding transcriptional regulator;baeR;cardoso
+b4357;DNA-binding transcriptional regulator;lgoR;cardoso
+b1013;DNA-binding transcriptional regulator;rutR;cardoso
+b0294;DNA-binding transcriptional regulator;ecpR;cardoso
+b3181;DNA-templated transcription, elongation;greA;cardoso
+b4442;Downregulates OmpA, PhoPQ;micA;cardoso
+b2470;Efflux transmembrane transporter activity;acrD;cardoso
+b2470;Efflux transmembrane transporter activity;acrD;cardoso
+b4041;Fatty acid metabolic process;plsB;cardoso
+b0180;Fatty acid synthesis;fabZ;cardoso
+b1048;Glucan biosynthetic process;opgG;cardoso
+b1049;Glucan biosynthetic process;opgH;cardoso
+b3622;Glycosyltransferase activity;waaL;cardoso
+b3340;GTPase activity;fusA;cardoso
+b3339;GTPase activity;tufA;cardoso
+b1653;Helicase activity;lhr;cardoso
+b1129;Histidine kinase;phoQ;cardoso
+b4159;Inner membrane ion channel;mscM;cardoso
+b0377;Inner membrane peptide antibiotic transporter;sbmA;cardoso
+b4159;Ion transport;mscM;cardoso
+b2060;Kinase activity;wzc;cardoso
+b0925;L,D-transpeptidase;ldtD;cardoso
+b1113;L,D-transpeptidase;ldtC;cardoso
+b4114;Lipid A biosynthetic process;eptA;cardoso
+b0179;Lipid A biosynthetic process;lpxD;cardoso
+b0180;Lipid A biosynthetic process;fabZ;cardoso
+b0181;Lipid A biosynthetic process;lpxA;cardoso
+b0182;Lipid A biosynthetic process;lpxB;cardoso
+b2378;Lipid A biosynthetic process;lpxP;cardoso
+b3546;Lipid A biosynthetic process;eptB;cardoso
+b4114;Lipid A-modifying enzyme;eptA;cardoso
+b3546;Lipid A-modifying enzyme;eptB;cardoso
+b3619;Lipopolysaccharide core biosynthesis;rfaD;cardoso
+b3620;Lipopolysaccharide core biosynthesis;waaF;cardoso
+b3621;Lipopolysaccharide core biosynthesis;waaC;cardoso
+b3622;Lipopolysaccharide core biosynthesis;waaL;cardoso
+b3200;Lipopolysaccharide transport;lptA;cardoso
+b3201;Lipopolysaccharide transport;lptB;cardoso
+b0054;Lipopolysaccharide transport;lptD;cardoso
+b0641;Lipopolysaccharide transport;lptE;cardoso
+b3199;Lipopolysaccharide transport;lptC;cardoso
+b4261;Lipopolysaccharide transport;lptF;cardoso
+b4262;Lipopolysaccharide transport;lptG;cardoso
+b3416;Maltose catabolic process;malQ;cardoso
+b1013;Master transcription regulator;rutR;cardoso
+b2494;Metalloendopeptidase activity;bepA;cardoso
+b0176;Metalloendopeptidase activity;rseP;cardoso
+b2494;Metalloprotease;bepA;cardoso
+b3205;Modulates GlmS synthesis;rapZ;cardoso
+b1707;Negative regulation of bacterial-type flagellum-dependent cell motility;rflP;cardoso
+b3203;Negative regulation of translation;hpf;cardoso
+b3202;Nitrogen compound metabolic process;rpoN;cardoso
+b3622;O-antigen ligase;waaL;cardoso
+b0929;Outer membrane porin;ompF;cardoso
+b2215;Outer membrane porin;ompC;cardoso
+b2617;Outer membrane protein assembly factor;bamE;cardoso
+b2595;Outer membrane protein assembly factor;bamD;cardoso
+b2512;Outer membrane protein assembly factor;bamB;cardoso
+b0177;Outer membrane protein assembly factor;bamA;cardoso
+b2477;Outer membrane protein assembly factor;bamC;cardoso
+b2893;Oxidoreductase activity;dsbC;cardoso
+b3860;Oxidoreductase activity;dsbA;cardoso
+b2494;Oxidoreductase activity;bepA;cardoso
+b0438;Peptidase activity;clpX;cardoso
+b0439;Peptidase activity;lon;cardoso
+b0377;Peptide transporter;sbmA;cardoso
+b3057;Peptidoglycan biosynthetic process;bacA;cardoso
+b0178;Periplasmic chaperone;skp;cardoso
+b1743;Periplasmic chaperone;spy;cardoso
+b0053;Periplasmic chaperone;surA;cardoso
+b2494;Periplasmic chaperone;bepA;cardoso
+b4484;Periplasmic protein;cpxP;cardoso
+b0161;Periplasmic serine protease;degP;cardoso
+b2061;Phosphatase activity;wzb;cardoso
+b1129;Phosphatase activity;phoQ;cardoso
+b2340;Phosphatase activity;sixA;cardoso
+b4160;Phosphatidylethanolamine biosynthetic process;psd;cardoso
+b4114;Phosphoethanolamine transferase;eptA;cardoso
+b3546;Phosphoethanolamine transferase;eptB;cardoso
+b0180;Phospholipid biosynthetic process;fabZ;cardoso
+b4041;Phospholipid biosynthetic process;plsB;cardoso
+b1129;Phosphorelay sensor kinase activity;phoQ;cardoso
+b4114;Phosphotransferase activity;eptA;cardoso
+b3546;Phosphotransferase activity;eptB;cardoso
+b2062;Polysaccharide transmembrane transporter activity;wza;cardoso
+b3067;Primary sigma factor during exponential growth;rpoD;cardoso
+b2893;Protein disulfide isomerase activity;dsbC;cardoso
+b3860;Protein disulfide isomerase activity;dsbA;cardoso
+b2494;Protein disulfide isomerase activity;bepA;cardoso
+b0178;Protein folding;skp;cardoso
+b2893;Protein folding;dsbC;cardoso
+b0053;Protein folding;surA;cardoso
+b2494;Protein folding;bepA;cardoso
+b0178;Protein maturation;skp;cardoso
+b3347;Protein refolding;fkpA;cardoso
+b3859;Protein serine/threonine kinase activity;srkA;cardoso
+b0178;Protein stabilization;skp;cardoso
+b0053;Protein stabilization;surA;cardoso
+b2495;Putative oxidoreductase;yfgD;cardoso
+b4431;Rcs stress response regulon;rprA;cardoso
+b1707;Regulation of DNA-binding transcription factor activity;rflP;cardoso
+b2340;Regulation of phosphorelay signal transduction system;sixA;cardoso
+b3461;Regulation of transcription;rpoH;cardoso
+b2573;Regulation of transcription;rpoE;cardoso
+b3202;Regulation of transcription;rpoN;cardoso
+b3067;Regulation of transcription;rpoD;cardoso
+b4725;Regulation of translation;rseD;cardoso
+b4114;Response to antibiotic;eptA;cardoso
+b0377;Response to antibiotic;sbmA;cardoso
+b2470;Response to antibiotic;acrD;cardoso
+b3057;Response to antibiotic;bacA;cardoso
+b3860;Response to antibiotic;dsbA;cardoso
+b2470;Response to antibiotic;acrD;cardoso
+b3546;Response to antibiotic;eptB;cardoso
+b2378;Response to cold;lpxP;cardoso
+b1129;Response to external stimulus;phoQ;cardoso
+b3461;Response to heat;rpoH;cardoso
+b0439;Response to heat;lon;cardoso
+b3150;Response to osmotic stress;yraP;cardoso
+b1048;Response to osmotic stress;opgG;cardoso
+b2570;Response to oxidative stress;rseC;cardoso
+b0378;Response to peptide;yaiW;cardoso
+b3923;Response to starvation;uspD;cardoso
+b3923;Response to superoxide;uspD;cardoso
+b3923;Response to UV;uspD;cardoso
+b3203;Ribosome binding;hpf;cardoso
+b3203;Ribosome hibernation promoting factor;hpf;cardoso
+b3205;RNA destabilization;rapZ;cardoso
+b3205;RNase adaptor protein;rapZ;cardoso
+b3911;Sensor histidine kinase;cpxA;cardoso
+b2078;Sensor histidine kinase;baeS;cardoso
+b0439;Serine protease;lon;cardoso
+b4725;Sigma E stress response;rseD;cardoso
+b3200;Sigma E stress response regulon;lptA;cardoso
+b3201;Sigma E stress response regulon;lptB;cardoso
+b0054;Sigma E stress response regulon;lptD;cardoso
+b0161;Sigma E stress response regulon;degP;cardoso
+b0178;Sigma E stress response regulon;skp;cardoso
+b0179;Sigma E stress response regulon;lpxD;cardoso
+b0180;Sigma E stress response regulon;fabZ;cardoso
+b0181;Sigma E stress response regulon;lpxA;cardoso
+b0377;Sigma E stress response regulon;sbmA;cardoso
+b0378;Sigma E stress response regulon;yaiW;cardoso
+b2617;Sigma E stress response regulon;bamE;cardoso
+b2893;Sigma E stress response regulon;dsbC;cardoso
+b3461;Sigma E stress response regulon;rpoH;cardoso
+b4160;Sigma E stress response regulon;psd;cardoso
+b4159;Sigma E stress response regulon;mscM;cardoso
+b2573;Sigma E stress response regulon;rpoE;cardoso
+b2572;Sigma E stress response regulon;rseA;cardoso
+b2571;Sigma E stress response regulon;rseB;cardoso
+b2570;Sigma E stress response regulon;rseC;cardoso
+b1806;Sigma E stress response regulon;yeaY;cardoso
+b0873;Sigma E stress response regulon;hcp;cardoso
+b0872;Sigma E stress response regulon;hcr;cardoso
+b2595;Sigma E stress response regulon;bamD;cardoso
+b0471;Sigma E stress response regulon;ybaB;cardoso
+b0472;Sigma E stress response regulon;recR;cardoso
+b2512;Sigma E stress response regulon;bamB;cardoso
+b2511;Sigma E stress response regulon;der;cardoso
+b0177;Sigma E stress response regulon;bamA;cardoso
+b0182;Sigma E stress response regulon;lpxB;cardoso
+b0183;Sigma E stress response regulon;rnhB;cardoso
+b0184;Sigma E stress response regulon;dnaE;cardoso
+b0304;Sigma E stress response regulon;rclA;cardoso
+b0303;Sigma E stress response regulon;rclB;cardoso
+b0301;Sigma E stress response regulon;rclC;cardoso
+b3558;Sigma E stress response regulon;insK;cardoso
+b4438;Sigma E stress response regulon;cyaR;cardoso
+b3688;Sigma E stress response regulon;yidQ;cardoso
+b1902;Sigma E stress response regulon;ftnB;cardoso
+b4415;Sigma E stress response regulon;hokE;cardoso
+b3619;Sigma E stress response regulon;rfaD;cardoso
+b3620;Sigma E stress response regulon;waaF;cardoso
+b3621;Sigma E stress response regulon;waaC;cardoso
+b3622;Sigma E stress response regulon;waaL;cardoso
+b3527;Sigma E stress response regulon;yhjJ;cardoso
+b2893;Sigma E stress response regulon;dsbC;cardoso
+b2892;Sigma E stress response regulon;recJ;cardoso
+b2891;Sigma E stress response regulon;prfB;cardoso
+b0691;Sigma E stress response regulon;ybfG;cardoso
+b4717;Sigma E stress response regulon;micL;cardoso
+b3150;Sigma E stress response regulon;yraP;cardoso
+b3340;Sigma E stress response regulon;fusA;cardoso
+b3339;Sigma E stress response regulon;tufA;cardoso
+b2631;Sigma E stress response regulon;rnlB;cardoso
+b1112;Sigma E stress response regulon;bhsA;cardoso
+b2062;Sigma E stress response regulon;wza;cardoso
+b2061;Sigma E stress response regulon;wzb;cardoso
+b2060;Sigma E stress response regulon;wzc;cardoso
+b3095;Sigma E stress response regulon;yqjA;cardoso
+b3096;Sigma E stress response regulon;mzrA;cardoso
+b2477;Sigma E stress response regulon;bamC;cardoso
+b0053;Sigma E stress response regulon;surA;cardoso
+b0052;Sigma E stress response regulon;pdxA;cardoso
+b0051;Sigma E stress response regulon;rsmA;cardoso
+b0050;Sigma E stress response regulon;apaG;cardoso
+b0049;Sigma E stress response regulon;apaH;cardoso
+b4357;Sigma E stress response regulon;lgoR;cardoso
+b3347;Sigma E stress response regulon;fkpA;cardoso
+b2958;Sigma E stress response regulon;yggN;cardoso
+b1048;Sigma E stress response regulon;opgG;cardoso
+b1049;Sigma E stress response regulon;opgH;cardoso
+b1466;Sigma E stress response regulon;narW;cardoso
+b1465;Sigma E stress response regulon;narV;cardoso
+b3202;Sigma E stress response regulon;rpoN;cardoso
+b3203;Sigma E stress response regulon;hpf;cardoso
+b3204;Sigma E stress response regulon;ptsN;cardoso
+b3205;Sigma E stress response regulon;rapZ;cardoso
+b1810;Sigma E stress response regulon;yoaC;cardoso
+b3323;Sigma E stress response regulon;gspA;cardoso
+b3322;Sigma E stress response regulon;gspB;cardoso
+b3657;Sigma E stress response regulon;yicJ;cardoso
+b3656;Sigma E stress response regulon;yicI;cardoso
+b0443;Sigma E stress response regulon;fadM;cardoso
+b2494;Sigma E stress response regulon;bepA;cardoso
+b2495;Sigma E stress response regulon;yfgD;cardoso
+b2419;Sigma E stress response regulon;yfeK;cardoso
+b2420;Sigma E stress response regulon;yfeS;cardoso
+b3067;Sigma E stress response regulon;rpoD;cardoso
+b4041;Sigma E stress response regulon;plsB;cardoso
+b4216;Sigma E stress response regulon;ytfJ;cardoso
+b1653;Sigma E stress response regulon;lhr;cardoso
+b0176;Sigma E stress response regulon;rseP;cardoso
+b1129;Sigma E stress response regulon;phoQ;cardoso
+b2378;Sigma E stress response regulon;lpxP;cardoso
+b3190;Sigma E stress response regulon;ibaG;cardoso
+b2340;Sigma E stress response regulon;sixA;cardoso
+b1643;Sigma E stress response regulon;ydhI;cardoso
+b1644;Sigma E stress response regulon;ydhJ;cardoso
+b1645;Sigma E stress response regulon;ydhK;cardoso
+b1013;Sigma E stress response regulon;rutR;cardoso
+b3181;Sigma E stress response regulon;greA;cardoso
+b0438;Sigma E stress response regulon;clpX;cardoso
+b0439;Sigma E stress response regulon;lon;cardoso
+b4417;Sigma E stress response regulon;rybB;cardoso
+b3546;Sigma E stress response regulon;eptB;cardoso
+b3712;Sigma E stress response regulon;yieE;cardoso
+b3713;Sigma E stress response regulon;yieF;cardoso
+b3055;Sigma E stress response regulon;ygiM;cardoso
+b3056;Sigma E stress response regulon;cca;cardoso
+b3416;Sigma E stress response regulon;malQ;cardoso
+b2432;Sigma E stress response regulon;yfeY;cardoso
+b2431;Sigma E stress response regulon;yfeX;cardoso
+b3575;Sigma E stress response regulon;yiaK;cardoso
+b3576;Sigma E stress response regulon;yiaL;cardoso
+b3577;Sigma E stress response regulon;yiaM;cardoso
+b3578;Sigma E stress response regulon;yiaN;cardoso
+b3579;Sigma E stress response regulon;yiaO;cardoso
+b3580;Sigma E stress response regulon;lyxK;cardoso
+b3581;Sigma E stress response regulon;sgbH;cardoso
+b3582;Sigma E stress response regulon;sgbU;cardoso
+b3583;Sigma E stress response regulon;sgbE;cardoso
+b0294;Sigma E stress response regulon;ecpR;cardoso
+b4442;Sigma E stress response regulon;micA;cardoso
+b0554;Sigma E stress response regulon;essD;cardoso
+b0555;Sigma E stress response regulon;rrrD;cardoso
+b0556;Sigma E stress response regulon;rzpD;cardoso
+b2970;Sigma E stress response regulon;yghF;cardoso
+b1707;Sigma E stress response regulon;rflP;cardoso
+b3922;Sigma E stress response regulon;yiiS;cardoso
+b3923;Sigma E stress response regulon;uspD;cardoso
+b3057;Sigma E stress response regulonpyrophosphatase activity;bacA;cardoso
+b3461;Sigma factor activity;rpoH;cardoso
+b2573;Sigma factor activity;rpoE;cardoso
+b3202;Sigma factor activity;rpoN;cardoso
+b3067;Sigma factor activity;rpoD;cardoso
+b2572;Sigma factor antagonist activity;rseA;cardoso
+b4431;Small regulatory RNA;rprA;cardoso
+b4716;Small regulatory RNA;cpxQ;cardoso
+b4438;Small regulatory RNA;cyaR;cardoso
+b4717;Small regulatory RNA;micL;cardoso
+b4417;Small regulatory RNA;rybB;cardoso
+b4442;Small regulatory RNA;micA;cardoso
+b4828;Small RNA;;cardoso
+b3859;Stress response kinase A;srkA;cardoso
+b0378;Surface-exposed outer membrane lipoprotein;yaiW;cardoso
+b3340;Translation elongation factor activity;fusA;cardoso
+b3339;Translation elongation factor activity;tufA;cardoso
+b3923;Universal stress protein;uspD;cardoso
+b0554;Viral release from host cell;essD;cardoso
+b0555;Viral release from host cell;rrrD;cardoso
+b0556;Viral release from host cell;rzpD;cardoso
