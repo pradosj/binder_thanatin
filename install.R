@@ -10,7 +10,8 @@ install.packages(c(
   "patchwork",
   "magrittr",
   "plotly",
-  "rmarkdown"
+  "rmarkdown",
+  "markdown"
 ))
 BiocManager::install(c(
   "GenomicRanges",
