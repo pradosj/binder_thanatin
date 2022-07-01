@@ -130,8 +130,9 @@ ggmap <- function(x,qx,qy,highlight) {
       geom_abline(slope=1,intercept = c(-log2(1.5),log2(1.5))) +
       theme(legend.position="none",panel.grid = element_blank(),panel.background = element_blank())
 }
-#color_mask <- !any(grepl("^Cpx",mcols(x)$manual_genesets))
-highlight_mask <- any(grepl("^CpxR",mcols(x)$regdb))
+# highlight_mask <- any(grepl("^Cpx",mcols(x)$manual_genesets))
+# highlight_mask <- any(grepl("^CpxR",mcols(x)$regdb))
+highlight_mask <- !any(grepl(".",mcols(x)$regdb))
 p0 <- ggmap(x,~`log2_fc_avg.C005/C000`,~`log2_fc_avg.T005/C000`,highlight_mask) + ggtitle("0' >> 5'")
 p1 <- ggmap(x,~`log2_fc_avg.C030/C005`,~`log2_fc_avg.T030/T005`,highlight_mask) + ggtitle("5' >> 30'")
 p2 <- ggmap(x,~`log2_fc_avg.C120/C030`,~`log2_fc_avg.T120/T030`,highlight_mask) + ggtitle("30' >> 120'")
@@ -175,6 +176,55 @@ gg_gene_timecourse(x[any(grepl("^Cpx stress",mcols(x)$manual_genesets))]) + ggti
 gg_gene_timecourse(x[any(grepl("^Lipopolysaccharide transport",mcols(x)$manual_genesets))]) + ggtitle("^Lipopolysaccharide transport")
 ```
 
+
+
+
+```{r fig.height=10, fig.width=5}
+gg_gene_timecourse_heatmap <- function(X) {
+  Z <- assay(X,"rpkm")
+  Z <- reshape2::melt(Z)
+  Z <- cbind(Z,colData(X)[Z$Var2,])
+  Z <- cbind(Z,mcols(X)[Z$Var1,c("gene","locus_tag")])
+  Z$gene <- factor(Z$gene,mcols(X)$gene)
+  ggplot(Z) + 
+    geom_tile(aes(x=lib,y=gene,fill=value)) + 
+    labs(fill="rpkm") +
+    theme(axis.text.x=element_text(angle=90,hjust=1,vjust=0.5))
+}
+gg_gene_timecourse_heatmap_fc <- function(X,ref=c("C0","all"),lim=2) {
+  ref <- match.arg(ref)
+  Z <- assay(X,"rpkm")
+  Z <- log2(Z + 1)
+  if (ref=="all") {
+    Z <- Z - rowMeans(Z)  
+  } else {
+    Z <- Z - rowMeans(Z[,paste0(X$cond,X$time)=="C0"])  
+  }
+  Z <- reshape2::melt(Z)
+  Z <- cbind(Z,colData(X)[Z$Var2,])
+  Z <- cbind(Z,mcols(X)[Z$Var1,c("gene","locus_tag")])
+  Z$gene <- factor(Z$gene,mcols(X)$gene)
+  
+  Z$value[Z$value < -lim] <- -lim
+  Z$value[Z$value > +lim] <- +lim
+  
+  ggplot(Z) + 
+    geom_tile(aes(x=lib,y=gene,fill=value)) + 
+    scale_fill_distiller(palette = "RdBu") +
+    theme(axis.text.x=element_text(angle=90,hjust=1,vjust=0.5))
+}
+
+
+X <- x[match(c("cpxP","ldtD","rpoE","lptA","eptA","rprA"),mcols(x)$gene)]
+
+X <- x[any(mcols(x)$regdb %in% "SigE")]
+X <- X[hclust(dist(t(scale(t(log2(assay(X,"rpkm")+1))))),method="ward.D2")$order]
+
+gg_gene_timecourse(X)
+gg_gene_timecourse_heatmap(X)
+gg_gene_timecourse_heatmap_fc(X,ref="all")
+gg_gene_timecourse_heatmap_fc(X,ref="C0")
+```
 
 
 # Regulon DB
