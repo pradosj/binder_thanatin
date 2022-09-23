@@ -28,6 +28,11 @@ mcols(x)$manual_genesets <- local({
   G$locus_tag <- factor(G$locus_tag,unique(mcols(x)$locus_tag))
   unique(splitAsList(G$category,G$locus_tag))[mcols(x)$locus_tag]
 })
+mcols(x)$kegg_genesets <- local({
+  G <- read.csv2("kegg_genesets.csv")
+  G$locus_tag <- factor(G$locus_tag,unique(mcols(x)$locus_tag))
+  unique(splitAsList(G$Category,G$locus_tag))[mcols(x)$locus_tag]
+})
 ```
 
 
@@ -89,7 +94,7 @@ local({
 
 
 
-
+# Make scatter plots comparing all genes expressions between 2 conditions
 ```{r}
 ggscatter <- function(x,qx,qy) {
   mcols(x)[c("locus_tag","gene","log2_fc_avg")] %>%
@@ -144,7 +149,7 @@ plotly::ggplotly(p2,tooltip="text") %>% plotly::config(displayModeBar = TRUE)
 ```
 
 
-# Example genes
+# Show expression evolution accross time for selected genes
 
 ```{r}
 gg_gene_timecourse <- function(X) {
@@ -154,21 +159,20 @@ gg_gene_timecourse <- function(X) {
   Z$gene <- factor(Z$gene,mcols(X)$gene)
   ggplot(Z) + facet_wrap(~gene,scales="free_y") +
     geom_line(aes(x=time,y=value,group=sample,color=cond)) + 
-    geom_point(aes(x=time,y=value,color=cond)) + ylab("normalized gene expression (rpkm)")
+    geom_point(aes(x=time,y=value,color=cond)) + ylab("normalized gene expression (rpkm)") + 
+    theme_classic()
 }
 
 gg_gene_timecourse(x[match(c("cpxP","ldtD","rpoE","lptA","eptA","rprA"),mcols(x)$gene)])
 gg_gene_timecourse(x[c("cpxP","ldtD","rpoE","lptA","eptA","rprA")])
 gg_gene_timecourse(x[match(c("degP","dsbA","ppiA","sulA"),mcols(x)$gene)])
-
-
-
 gg_gene_timecourse(x[match(c("b3702"),mcols(x)$locus_tag)])
 ```
 
 
 ```{r,fig.width=6,fig.height=4}
 gg_gene_timecourse(x[any(grepl("^Cpx stress",mcols(x)$manual_genesets))]) + ggtitle("Cpx stress")
+gg_gene_timecourse(x[any(grepl("Riboflavin metabolism",mcols(x)$kegg_genesets))])
 ```
 
 
@@ -180,6 +184,7 @@ gg_gene_timecourse(x[any(grepl("^Lipopolysaccharide transport",mcols(x)$manual_g
 
 
 ```{r fig.height=10, fig.width=5}
+# To display heatmap of absolute normalize
 gg_gene_timecourse_heatmap <- function(X) {
   Z <- assay(X,"rpkm")
   Z <- reshape2::melt(Z)
@@ -189,8 +194,11 @@ gg_gene_timecourse_heatmap <- function(X) {
   ggplot(Z) + 
     geom_tile(aes(x=lib,y=gene,fill=value)) + 
     labs(fill="rpkm") +
+    theme_classic() +
     theme(axis.text.x=element_text(angle=90,hjust=1,vjust=0.5))
 }
+
+# To display heatmap of fold-changes
 gg_gene_timecourse_heatmap_fc <- function(X,ref=c("C0","all"),lim=2) {
   ref <- match.arg(ref)
   Z <- assay(X,"rpkm")
@@ -211,10 +219,21 @@ gg_gene_timecourse_heatmap_fc <- function(X,ref=c("C0","all"),lim=2) {
   ggplot(Z) + 
     geom_tile(aes(x=lib,y=gene,fill=value)) + 
     scale_fill_distiller(palette = "RdBu") +
+    theme_classic() +
     theme(axis.text.x=element_text(angle=90,hjust=1,vjust=0.5))
 }
+```
 
 
+```{r}
+X <- x[any(grepl("Riboflavin metabolism",mcols(x)$kegg_genesets))]
+gg_gene_timecourse(X)
+gg_gene_timecourse_heatmap_fc(X,ref="all") + ggtitle("Riboflavin metabolism")
+gg_gene_timecourse_heatmap_fc(X,ref="C0") + ggtitle("Riboflavin metabolism")
+```
+
+
+```{r fig.height=10, fig.width=5}
 X <- x[match(c("cpxP","ldtD","rpoE","lptA","eptA","rprA"),mcols(x)$gene)]
 
 X <- x[any(mcols(x)$regdb %in% "SigE")]
@@ -231,136 +250,50 @@ gg_gene_timecourse_heatmap_fc(X,ref="C0")
 
 ```{r}
 source("lib/gsea/lib_gsea.R")
+gsea_hcol <- function(GSEA) {
+  m <- -log10(GSEA$enrichment_pval)
+  rownames(m) <- seq(nrow(m))
+  m[m>7] <- 7
+  U <- grepl("^up\\.",colnames(m))
+  D <- grepl("^dn\\.",colnames(m))
+  colnames(m) <- sub("^(up|dn)\\.","",colnames(m))
+  gg_matrix_hcol2(m[,U],m[,D],GSEA$overlap_size[,U],GSEA$overlap_size[,D]) + 
+    theme(legend.position = "none") + scale_fill_manual(values=c("#990099","yellow")) + 
+    scale_y_continuous(breaks = seq(nrow(m)),labels = sprintf("%s (n=%d)",GSEA$geneset_name,GSEA$geneset_size))
+}
 mcols(x)$treatment_change <- cbind(
   "0' >> 5'" = (mcols(x)$log2_fc_avg[,"T005/C000"] - mcols(x)$log2_fc_avg[,"C005/C000"]),
   "5' >> 30'" = (mcols(x)$log2_fc_avg[,"T030/T005"] - mcols(x)$log2_fc_avg[,"C030/C005"]),
   "30' >> 120'" = (mcols(x)$log2_fc_avg[,"T120/T030"] - mcols(x)$log2_fc_avg[,"C120/C030"]),
   "5' >> 120'" = (mcols(x)$log2_fc_avg[,"T120/T005"] - mcols(x)$log2_fc_avg[,"C120/C005"])
 )
+M <- as.matrix(data.frame(check.names = FALSE,
+  up = mcols(x)$treatment_change >= +log2(1.5),
+  dn = mcols(x)$treatment_change <= -log2(1.5)
+))
+```
 
 
-M <- cbind(
-  mcols(x)$treatment_change >= +log2(1.5),
-  mcols(x)$treatment_change <= -log2(1.5)
-)
-rownames(M) <- mcols(x)$locus_tag
-
-gsea <- multi_gsea(M,setNames(mcols(x)$regdb,mcols(x)$locus_tag))
-gsea$id <- gsea$geneset_name
+# Analysis of enrichment of regdb genesets
+```{r,fig.height=6,fig.width=3}
+gsea <- multi_gsea(M,setNames(mcols(x)$regdb,rownames(x)))
 GSEA <- gsea[rowSums(gsea$enrichment_qval<=5e-2)>0,]
 #GSEA <- subset(gsea,geneset_name %in% c("PhoB","PhoP","RcsB","RcsAB","GadE-RcsB","RcsB-BglJ"))
-#GSEA <- gsea
+gsea_hcol(GSEA)
 ```
 
-
-```{r,fig.height=6,fig.width=6}
-library(igraph)
-library(ggraph)
-source("lib/gsea/lib_obo.R")
-
-# Subset the hierachy
-h <- graph_from_edgelist(cbind(unique(unlist(mcols(x)$regdb)),"regdb"))
-H <- induced_subgraph(h,unique(as.character(reachable(h,V(h)[GSEA$id])$node_id)))
-
-# unfold DAG into a tree and annotate the tree
-U <- unfold_dag(H)
-V(U$tree)$tree_depth <- nchar(gsub("[^/]","",V(U$tree)$name))
-V(U$tree)$order[order(V(U$tree)$name)] <- rev(seq(vcount(U$tree)))
-V(U$tree)$id <- V(H)$name[U$vertex_index]
-V(U$tree)$term <- V(H)$name[U$vertex_index]
-V(U$tree)$geneset_size <- gsea$geneset_size[match(V(U$tree)$id,gsea$id)]
-
-# tree display as a folder
-p_tree <- ggraph(U$tree,layout=cbind(V(U$tree)$tree_depth,V(U$tree)$order)) + 
-  geom_edge_bend(flipped = TRUE) +
-  geom_node_point() +
-  geom_node_text(aes(x = x+0.5,label=sprintf("%s (%d)",term,geneset_size)),hjust=0,size=3) +
-  coord_cartesian(xlim=c(0,10)) + 
-  theme(axis.ticks.y = element_line(),axis.text.y = element_text())
-
-
-# generate matrix horizontal barplot
-m <- -log10(gsea$enrichment_pval[match(V(U$tree)$id,gsea$id),])[order(V(U$tree)$order),]
-rownames(m) <- seq(nrow(m))
-m[m>7] <- 7
-colnames(m) <- sub("(up|dn).","",colnames(m))
-
-N <- gsea$overlap_size[match(V(U$tree)$id,gsea$id),][order(V(U$tree)$order),]
-
-
-p1 <- gg_matrix_hcol2(m[,1:4],m[,5:8],N[,1:4],N[,5:8]) + 
-  theme(legend.position = "none") + scale_fill_manual(values=c("#990099","yellow"))
-
-p_tree + p1 + plot_layout(width=c(1,4)) & ylim(0.5,66.5)
-
-```
-
-
-
-
-```{r,eval=FALSE}
-g <- mcols(x)$regdb %>%
-  setNames(mcols(x)$gene_id) %>%
-  stack() %>%
-  as.data.frame() %>% rev() %>%
-  graph_from_data_frame()
-G <- data.frame("root",unique(unlist(mcols(x)$regdb))) %>%
-  graph_from_data_frame()
-g <- g + G
-V(g)$fc <- mcols(x)$treatment_change[match(V(g)$name,mcols(x)$gene_id),"5' >> 30'"]
-
-h <- unfold_tree(g,"out","root")
-V(h$tree)$fc <- V(g)$fc[h$vertex_index]
-V(h$tree)$regdb <-V(g)$name[h$vertex_index] 
-set.seed(12345)
-ggraph(h$tree,"circlepack") +
-  geom_node_circle(aes(fill=pmax(pmin(fc,2),-2),filter=leaf),color=NA,n=5) + 
-  geom_node_circle(aes(filter=!leaf),color="lightgrey") + 
-  #geom_node_text(aes(label=regdb,filter=(!leaf & !(regdb %in% "root"))),size=2) +
-  scale_fill_distiller(palette = "RdBu",direction = -1) +
-  coord_equal() + theme(panel.background=element_blank()) + 
-  labs(fill=expression(log[2](fc)))
-```
-
-
-
-
-
-
-
-
-
-# Gene Ontology
-
-
-
+# Analysis of enrichment of KEGG genesets
 ```{r}
-M <- cbind(
-  mcols(x)$treatment_change[,2,drop=FALSE] >= +log2(1.5),
-  mcols(x)$treatment_change[,2,drop=FALSE] <= -log2(1.5)
-)
-rownames(M) <- mcols(x)$locus_tag
-colSums(M)
-
-gsea <- multi_gsea(M,setNames(mcols(x)$goall_term,mcols(x)$locus_tag))
-gsea$id <- sub(":::.*","",gsea$geneset_name)
-GSEA <- gsea[rowSums(gsea$enrichment_qval<=1e-3)>0,]
+gsea <- multi_gsea(M,setNames(mcols(x)$kegg_genesets,rownames(x)))
+GSEA <- gsea[rowSums(gsea$enrichment_qval<=5e-2)>0,]
+gsea_hcol(GSEA)
 ```
 
-
-```{r}
-library(igraph)
-library(ggraph)
-source("lib/gsea/lib_obo.R")
-
-# Subset the hierachy
-h <- metadata(x)$go_obo
-H <- induced_subgraph(h,unique(as.character(reachable(h,V(h)[GSEA$id])$node_id)))
-V(H)$min_qval <- rowMins(gsea$enrichment_qval)[match(V(H)$name,gsea$id)]
-
-ggraph(H,"stress") + geom_node_point() + geom_edge_link() + geom_node_text(aes(label=term,color=min_qval<1e-3),size=3) 
+# Analysis of enrichment of GOTERMS genesets
+```{r,fig.height=30,fig.width=5}
+gsea <- multi_gsea(M,setNames(mcols(x)$goall_term,rownames(x)))
+GSEA <- gsea[rowSums(gsea$enrichment_qval<=5e-2)>0,]
+gsea_hcol(GSEA)
 ```
-
-
 
 
